@@ -50,8 +50,8 @@ let chars: StringArray = ['A', 'B']
 
 interface Names {
     [x: string]: string;
-    y: number;
-    [z:number]: number;
+    // y: number;
+    // [z:number]: number;
 }
 
 

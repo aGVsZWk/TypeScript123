@@ -14,7 +14,7 @@ tuple.push(2);
 console.log(tuple);
 
 // 函数
-let add = (x: number, y: number): number => x + y;
+let addxy = (x: number, y: number): number => x + y;
 let compute: (x: number, y: number) => number;
 compute = (x, y) : number => x+y;
 // 对象
