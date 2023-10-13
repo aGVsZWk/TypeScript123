@@ -155,7 +155,7 @@ theObj1 = theObj2;
 
 let lg1 = <T>(x: T): T => {
     console.log("x");
-    return x
+    return x;
 };
 let lg2 = <U>(y:U): U=> {
     console.log(y);
@@ -167,3 +167,87 @@ lg1 = lg2;
 // 结构之间兼容，成员少的兼容成员多的
 // 函数之间兼容：参数多个兼容参数少的
 
+
+
+// 类型保护机制
+enum Type {Strong, Week,}
+
+class Java {
+    helloJava() {
+        console.log("Hello Java");
+    }
+
+    java: any;
+}
+
+class JavaScript{
+    helloJavaScript() {
+        console.log("Hello JavaScript");
+    }
+
+    javascript: any;
+}
+
+function getLanguage(type: Type) {
+    let lang = type == Type.Strong ? new Java() : new JavaScript();
+    if ((lang  as Java).helloJava) { // 必须加类型断言，不然不知道传入什么参数；代码不优雅
+        (lang  as Java).helloJava();
+    } else {
+        (lang  as JavaScript).helloJavaScript();
+    }
+    return lang;
+}
+
+// 类型保护：TypeScript 能够在特定的区块中保证变量属于某种确定的类型
+// 可在此区块中放心地引用此类型的属性，或者调用此类型的方法
+
+// 4种方法
+// 1. 使用 instanceof
+function getLanguage1(type: Type) {
+    let lang = type == Type.Strong ? new Java() : new JavaScript();
+    if (lang instanceof Java) { // 必须加类型断言，不然不知道传入什么参数；代码不优雅
+        lang.helloJava();
+    } else {
+        lang.helloJavaScript()
+    }
+    return lang;
+}
+
+// 2. 通过属性确认区块
+function getLanguage2(type: Type) {
+    let lang = type == Type.Strong ? new Java() : new JavaScript();
+    if ('java' in lang) { // 必须加类型断言，不然不知道传入什么参数；代码不优雅
+        lang.helloJava();
+    } else {
+        lang.helloJavaScript()
+    }
+    return lang;
+}
+
+
+// 3. typeof 类型保护
+function getLanguage3(type: Type, x:string|number) {
+    let lang = type == Type.Strong ? new Java() : new JavaScript();
+    if (typeof x === "string") { // 必须加类型断言，不然不知道传入什么参数；代码不优雅
+        x.length
+    } else {
+        x.toFixed(2)
+    }
+    return lang;
+}
+
+
+// 4. 创建类型保护函数来创建函数类型
+function isJava(lang: Java | JavaScript): lang is Java {  // 类型位词
+    return (lang as Java).helloJava !== undefined;
+}
+
+function getLanguage4(type: Type) {
+    let lang = type == Type.Strong ? new Java() : new JavaScript();
+    if (isJava(lang)) {
+        lang.helloJava();
+    } else {
+        lang.helloJavaScript()
+    }
+    return lang;
+}
